@@ -1,0 +1,8 @@
+return {
+  'davidosomething/vim-colors-meh',
+  config = function()
+    vim.g.auto_colorscheme_filetype = {
+      markdown = 'rose-pine-dawn',
+    }
+  end,
+}
