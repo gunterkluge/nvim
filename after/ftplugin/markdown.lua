@@ -1,21 +1,12 @@
--- Aktiviert/Deaktiviert die Erkennung von Codeblöcken für bestimmte Sprachen
+-- Erkennung von Codeblöcken für bestimmte Sprachen
 vim.g.markdown_fenced_languages = {
   'bash=sh',
   'python',
   'lua',
 }
 
--- Aktiviert das Falten von Überschriften in Markdown-Dateien
+-- Falten von Überschriften in Markdown-Dateien
 vim.g.markdown_folding = 1
-
--- Bestimmt, ob Markdown-Dateien automatisch eine Struktur für die Überschriften (wie eine Linie unter den H1-/H2-Überschriften) anzeigen
-vim.g.markdown_strict = 1
-
--- Aktiviert die Anzeige von Links im Markdown als "visuelle" Links (klickbar)
-vim.g.markdown_link_exts = { '.md', '.markdown', '.mdown' }
-
--- Aktiviert die Behandlung von Fußnoten (z.B. [^1] für Fußnote)
-vim.g.markdown_syntax = 1
 
 vim.opt_local.wrap = true
 vim.opt_local.textwidth = 78
