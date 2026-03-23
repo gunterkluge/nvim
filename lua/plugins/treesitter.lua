@@ -1,7 +1,6 @@
 return { -- Highlight, edit, and navigate code
   'nvim-treesitter/nvim-treesitter',
   build = ':TSUpdate',
-  main = 'nvim-treesitter.configs', -- Sets main module to use for opts
   -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
   opts = {
     ensure_installed = {
@@ -30,6 +29,13 @@ return { -- Highlight, edit, and navigate code
     },
     indent = { enable = true, disable = { 'ruby' } },
   },
+  config = function(_, opts)
+    -- Windows: Zig als C-Compiler fuer Treesitter-Parser
+    if vim.fn.has('win32') == 1 then
+      require('nvim-treesitter.install').compilers = { 'zig' }
+    end
+    require('nvim-treesitter.configs').setup(opts)
+  end,
   -- There are additional nvim-treesitter modules that you can use to interact
   -- with nvim-treesitter. You should go explore a few and see what interests you:
   --
