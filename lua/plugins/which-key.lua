@@ -47,6 +47,13 @@ return { -- Useful plugin to show you pending keybinds.
       { '<leader>s', group = '[S]earch' },
       { '<leader>t', group = '[T]oggle' },
       { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+      { '<leader>o', group = '[O]rgmode' },
+      { '<localleader>c', group = 'Org [c]hange (TODO/Datum/Prio)' },
+      { '<localleader>i', group = 'Org e[i]nfügen' },
+      { '<localleader>o', group = 'Org [o]rganisieren' },
+      { '<localleader>x', group = 'Org [x] Clock' },
+      { '<localleader>l', group = 'Org [l]inks' },
+      { '<localleader>n', group = 'Org [n]otizen' },
     },
   },
 }

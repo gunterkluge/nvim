@@ -15,6 +15,10 @@ return { -- Autoformat
   opts = {
     notify_on_error = false,
     format_on_save = function(bufnr)
+      -- Nicht-modifizierbare Buffer (z.B. checkhealth) ueberspringen
+      if not vim.bo[bufnr].modifiable then
+        return nil
+      end
       -- Disable "format_on_save lsp_fallback" for languages that don't
       -- have a well standardized coding style. You can add additional
       -- languages here or re-enable it for the disabled ones.
@@ -32,9 +36,16 @@ return { -- Autoformat
       lua = { 'stylua' },
       -- Conform can also run multiple formatters sequentially
       python = { 'ruff_format' },
-      --
-      -- You can use 'stop_after_first' to run the first available formatter from the list
-      -- javascript = { "prettierd", "prettier", stop_after_first = true },
+      markdown = { 'prettier' },
+      sql = { 'sql_formatter' },
+    },
+    formatters = {
+      prettier = {
+        prepend_args = { '--prose-wrap', 'always', '--print-width', '80' },
+      },
+      sql_formatter = {
+        prepend_args = { '--language', 'postgresql', '--config', '{"keywordCase":"upper"}' },
+      },
     },
   },
 }

@@ -95,12 +95,24 @@ return {
         default = { 'lsp', 'path', 'snippets', 'lazydev' },
         per_filetype = {
           tex = { 'vimtex', 'snippets' }, --{ 'lsp', 'vimtex', 'snippets', 'buffer' },
+          org = { 'orgmode', 'snippets', 'path' },
+          sql = { 'dadbod', 'snippets', 'path' },
+          mysql = { 'dadbod', 'snippets', 'path' },
+          plsql = { 'dadbod', 'snippets', 'path' },
         },
         providers = {
           lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
           vimtex = {
             name = 'vimtex',
             module = 'blink.compat.source',
+          },
+          dadbod = {
+            name = 'Dadbod',
+            module = 'vim_dadbod_completion.blink',
+          },
+          orgmode = {
+            name = 'Orgmode',
+            module = 'orgmode.org.autocompletion.blink',
           },
         },
       },

@@ -1,5 +1,6 @@
 return {
   'lervag/vimtex',
+  enabled = false, -- Deaktiviert bis mactex+skim installiert sind
   lazy = false,
   init = function()
     vim.g.vimtex_view_method = 'skim'
