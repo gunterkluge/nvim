@@ -34,7 +34,13 @@ return { -- Highlight, edit, and navigate code
     if vim.fn.has('win32') == 1 then
       require('nvim-treesitter.install').compilers = { 'zig' }
     end
-    require('nvim-treesitter.configs').setup(opts)
+    -- Beide Modul-Namen unterstuetzen (alt: nvim-treesitter.configs, neu: nvim-treesitter)
+    local ok, ts_configs = pcall(require, 'nvim-treesitter.configs')
+    if ok then
+      ts_configs.setup(opts)
+    else
+      require('nvim-treesitter').setup(opts)
+    end
   end,
   -- There are additional nvim-treesitter modules that you can use to interact
   -- with nvim-treesitter. You should go explore a few and see what interests you:
