@@ -1,16 +1,19 @@
+-- Yank-Highlight
 vim.api.nvim_create_autocmd('TextYankPost', {
-  desc = 'Highlight when yanking (copying) text',
-  group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
+  group = vim.api.nvim_create_augroup('highlight-yank', { clear = true }),
   callback = function()
     vim.highlight.on_yank()
   end,
 })
-vim.api.nvim_create_augroup('RemoveTrailingWhitespace', { clear = true })
+
+-- Trailing Whitespace beim Speichern entfernen
 vim.api.nvim_create_autocmd('BufWritePre', {
-  group = 'RemoveTrailingWhitespace',
+  group = vim.api.nvim_create_augroup('remove-trailing-whitespace', { clear = true }),
   pattern = '*',
   command = '%s/\\s\\+$//e',
 })
+
+-- Cursor-Position wiederherstellen beim Oeffnen
 vim.api.nvim_create_autocmd('BufReadPost', {
   group = vim.api.nvim_create_augroup('restore-cursor', { clear = true }),
   callback = function()
@@ -21,54 +24,75 @@ vim.api.nvim_create_autocmd('BufReadPost', {
     end
   end,
 })
+
 -- =============================================================
--- Org Auto-Sync: Auto-Commit + Push bei jedem :w
--- Einfuegen in: ~/.config/nvim/lua/config/autocommands.lua
+-- Org Auto-Sync v2: Stash-safe, --no-rebase, asynchron
 -- =============================================================
 
--- Pull beim Neovim-Start (holt Aenderungen vom anderen Rechner)
+local org_dir = vim.fn.expand('~') .. '/org'
+
+local function is_org_repo()
+  return vim.fn.isdirectory(org_dir .. '/.git') == 1
+end
+
+-- Git-Befehl im org-Ordner ausfuehren mit Fehler-Notification
+local function org_git(cmd, label)
+  -- Windows: git bash verwenden falls vorhanden, sonst bash
+  local shell = vim.fn.has('win32') == 1
+    and { 'C:/Program Files/Git/bin/bash.exe', '-c', cmd }
+    or { 'bash', '-c', cmd }
+
+  vim.fn.jobstart(shell, {
+    detach = true,
+    on_stderr = function(_, data)
+      if data and data[1] ~= '' then
+        vim.schedule(function()
+          vim.notify(label .. ': ' .. table.concat(data, '\n'), vim.log.levels.WARN)
+        end)
+      end
+    end,
+  })
+end
+
+-- Pull beim Neovim-Start: stasht erst, damit unstaged changes kein Problem sind
 vim.api.nvim_create_autocmd('VimEnter', {
+  group = vim.api.nvim_create_augroup('org-sync-pull', { clear = true }),
   callback = function()
-    local org_dir = vim.fn.expand '~' .. '/org'
-    -- Nur wenn ~/org existiert und ein Git-Repo ist
-    if vim.fn.isdirectory(org_dir .. '/.git') == 1 then
-      vim.fn.jobstart({ 'git', '-C', org_dir, 'pull', '--rebase' }, {
-        detach = true,
-        on_stderr = function(_, data)
-          if data and data[1] ~= '' then
-            vim.schedule(function()
-              vim.notify('org pull: ' .. table.concat(data, '\n'), vim.log.levels.WARN)
-            end)
-          end
-        end,
-      })
-    end
+    if not is_org_repo() then return end
+
+    local cmd = table.concat({
+      'cd ' .. org_dir,
+      'git stash --include-untracked 2>/dev/null',
+      'git pull --no-rebase',
+      'git stash pop 2>/dev/null',
+      'git add -A && git diff --cached --quiet || git commit -m "sync: auto-merge on startup"',
+    }, ' && ')
+
+    org_git(cmd, 'org pull')
   end,
-  desc = 'Pull org repo on Neovim start',
+  desc = 'Pull org repo on Neovim start (stash-safe)',
 })
 
--- Auto-Commit + Push bei jedem Speichern einer .org-Datei in ~/org/
+-- Auto-Commit + Push bei jedem Speichern einer .org-Datei
 vim.api.nvim_create_autocmd('BufWritePost', {
-  pattern = vim.fn.expand '~' .. '/org/*.org',
+  group = vim.api.nvim_create_augroup('org-sync-push', { clear = true }),
+  pattern = vim.fn.expand('~') .. '/org/*.org',
   callback = function()
-    local org_dir = vim.fn.expand '~' .. '/org'
-    local filename = vim.fn.expand '%:t' -- z.B. "baustellen.org"
-    local timestamp = os.date '%Y-%m-%d %H:%M' -- z.B. "2026-03-24 14:32"
+    if not is_org_repo() then return end
+
+    local filename = vim.fn.expand('%:t')
+    local timestamp = os.date('%Y-%m-%d %H:%M')
     local commit_msg = string.format('update %s (%s)', filename, timestamp)
 
-    -- git add + commit (nur wenn es Aenderungen gibt) + pull --rebase + push
-    local cmd = string.format('cd %s && git add -A && git diff --cached --quiet || (git commit -m "%s" && git pull --rebase && git push)', org_dir, commit_msg)
+    local cmd = table.concat({
+      'cd ' .. org_dir,
+      'git add -A',
+      string.format('git diff --cached --quiet || git commit -m "%s"', commit_msg),
+      'git pull --no-rebase',
+      'git push',
+    }, ' && ')
 
-    vim.fn.jobstart({ 'bash', '-c', cmd }, {
-      detach = true,
-      on_stderr = function(_, data)
-        if data and data[1] ~= '' then
-          vim.schedule(function()
-            vim.notify('org sync: ' .. table.concat(data, '\n'), vim.log.levels.WARN)
-          end)
-        end
-      end,
-    })
+    org_git(cmd, 'org sync')
   end,
   desc = 'Auto-commit and push org files on save',
 })

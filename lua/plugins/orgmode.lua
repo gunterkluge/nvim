@@ -2,16 +2,10 @@ return {
   'nvim-orgmode/orgmode',
   event = 'VeryLazy',
   ft = { 'org' },
-  build = function()
-    -- Beim Installieren/Updaten: Parser gleich mitkompilieren
-    -- So muss man nie manuell :Org install_treesitter_grammar aufrufen
-    if vim.fn.has('win32') == 1 or vim.fn.has('win64') == 1 then
-      require('orgmode.utils.treesitter.install').compilers = { 'zig' }
-    end
-    require('orgmode.utils.treesitter.install').run()
-  end,
   config = function()
-    -- Windows: Zig als Compiler (auch hier nochmal, fuer spaetere Reinstalls)
+    -- Windows: Zig als Compiler fuer den org-Treesitter-Parser erzwingen
+    -- WICHTIG: orgmode hat einen EIGENEN Parser-Installer, unabhaengig von
+    -- nvim-treesitter! Die Einstellung in treesitter.lua hilft hier NICHT.
     if vim.fn.has('win32') == 1 or vim.fn.has('win64') == 1 then
       require('orgmode.utils.treesitter.install').compilers = { 'zig' }
     end

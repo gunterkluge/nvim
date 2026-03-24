@@ -1,0 +1,6 @@
+# Lazy.nvim Lock-Datei: pinnt Plugin-Versionen auf exakte Commits.
+# Nicht im Git tracken weil:
+# - Auf Mac und Windows laufen unterschiedliche Plugin-Versionen auseinander
+# - Erzeugt staendig Merge-Konflikte beim Sync zwischen Rechnern
+# - Lazy.nvim holt sich beim Start sowieso die neueste Version
+lazy-lock.json
