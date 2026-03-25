@@ -5,11 +5,11 @@ return {
   config = function()
     -- Dark/Light-Erkennung: macOS via defaults, Windows/Linux Fallback auf dark
     local flavour
-    if vim.fn.has('mac') == 1 then
+    if vim.fn.has 'mac' == 1 then
       local result = vim.fn.system 'defaults read -g AppleInterfaceStyle 2>/dev/null'
       flavour = vim.trim(result) == 'Dark' and 'mocha' or 'latte'
     else
-      flavour = 'mocha'
+      flavour = 'latte'
     end
 
     require('catppuccin').setup {
