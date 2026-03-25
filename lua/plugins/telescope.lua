@@ -10,7 +10,11 @@ return {
         and 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release'
         or 'make',
       cond = function()
-        return vim.fn.executable('make') == 1 or vim.fn.executable('cmake') == 1
+        if vim.fn.has('win32') == 1 then
+          return vim.fn.executable('cmake') == 1
+        else
+          return vim.fn.executable('make') == 1
+        end
       end,
     },
     { 'nvim-telescope/telescope-ui-select.nvim' },
