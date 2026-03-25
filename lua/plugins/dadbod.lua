@@ -11,7 +11,7 @@ return {
       vim.g.dbs = {
         { name = 'controlling', url = 'postgresql://postgres:passwort@localhost:5432/controlling' },
       }
-      vim.g.db_ui_save_location = '~/copilot/lernprojekt/queries/'
+      vim.g.db_ui_save_location = vim.fn.expand '~/copilot/lernprojekt/queries/'
     end,
   },
 }

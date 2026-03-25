@@ -7,10 +7,12 @@ end
 local journal_dir = vim.g.journal_directory
 local journal_info = {}
 
+local sep = vim.fn.has('win32') == 1 and '\\' or '/'
+
 local function calculate_journal_info(date)
   date = date or os.date '*t'
-  journal_info.dir = string.format('%s/%d/%02d', journal_dir, date.year, date.month)
-  journal_info.file_name = string.format('%s/%02d.md', journal_info.dir, date.day)
+  journal_info.dir = string.format('%s' .. sep .. '%d' .. sep .. '%02d', journal_dir, date.year, date.month)
+  journal_info.file_name = string.format('%s' .. sep .. '%02d.md', journal_info.dir, date.day)
   journal_info.day = string.format('%02d', date.day)
 end
 

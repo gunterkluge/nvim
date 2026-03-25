@@ -29,7 +29,7 @@ vim.api.nvim_create_autocmd('BufReadPost', {
 -- Org Auto-Sync v2: Stash-safe, --no-rebase, asynchron
 -- =============================================================
 
-local org_dir = vim.fn.expand('~') .. '/org'
+local org_dir = vim.fn.expand '~/org'
 
 local function is_org_repo()
   return vim.fn.isdirectory(org_dir .. '/.git') == 1
@@ -38,9 +38,18 @@ end
 -- Git-Befehl im org-Ordner ausfuehren mit Fehler-Notification
 local function org_git(cmd, label)
   -- Windows: git bash verwenden falls vorhanden, sonst bash
-  local shell = vim.fn.has('win32') == 1
-    and { 'C:/Program Files/Git/bin/bash.exe', '-c', cmd }
-    or { 'bash', '-c', cmd }
+  local shell
+  if vim.fn.has('win32') == 1 then
+    local git_bash = 'C:/Program Files/Git/bin/bash.exe'
+    if vim.fn.executable(git_bash) == 1 then
+      shell = { git_bash, '-c', cmd }
+    else
+      vim.notify('org-sync: Git Bash nicht gefunden (' .. git_bash .. ')', vim.log.levels.WARN)
+      return
+    end
+  else
+    shell = { 'bash', '-c', cmd }
+  end
 
   vim.fn.jobstart(shell, {
     detach = true,
@@ -76,7 +85,7 @@ vim.api.nvim_create_autocmd('VimEnter', {
 -- Auto-Commit + Push bei jedem Speichern einer .org-Datei
 vim.api.nvim_create_autocmd('BufWritePost', {
   group = vim.api.nvim_create_augroup('org-sync-push', { clear = true }),
-  pattern = vim.fn.expand('~') .. '/org/*.org',
+  pattern = vim.fn.expand '~/org/*.org',
   callback = function()
     if not is_org_repo() then return end
 

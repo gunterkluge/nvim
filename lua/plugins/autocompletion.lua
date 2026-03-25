@@ -22,7 +22,7 @@ return {
         end)(),
         opts = {},
         config = function()
-          require('luasnip.loaders.from_lua').load { paths = { '~/.config/nvim/LuaSnip/' } }
+          require('luasnip.loaders.from_lua').load { paths = { vim.fn.stdpath 'config' .. '/LuaSnip' } }
           require('luasnip').config.set_config {
             enable_autosnippets = true,
           }

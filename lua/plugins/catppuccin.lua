@@ -3,8 +3,14 @@ return {
   name = 'catppuccin',
   priority = 1000,
   config = function()
-    local result = vim.fn.system 'defaults read -g AppleInterfaceStyle 2>/dev/null'
-    local flavour = vim.trim(result) == 'Dark' and 'mocha' or 'latte'
+    -- Dark/Light-Erkennung: macOS via defaults, Windows/Linux Fallback auf dark
+    local flavour
+    if vim.fn.has('mac') == 1 then
+      local result = vim.fn.system 'defaults read -g AppleInterfaceStyle 2>/dev/null'
+      flavour = vim.trim(result) == 'Dark' and 'mocha' or 'latte'
+    else
+      flavour = 'mocha'
+    end
 
     require('catppuccin').setup {
       flavour = flavour,
