@@ -5,13 +5,13 @@ return {
     'nvim-lua/plenary.nvim',
     {
       'nvim-telescope/telescope-fzf-native.nvim',
-      -- Plattform-Weiche: make auf Mac, cmake auf Windows (make gibt es dort nicht)
+      -- Plattform-Weiche: make auf Mac, zig cc auf Windows (kein MSVC/nmake nötig)
       build = vim.fn.has('win32') == 1
-        and 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release'
+        and 'cmd /c if not exist build mkdir build && zig cc -O2 -shared -std=c99 src/fzf.c -o build/libfzf.dll -D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_SECURE_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS'
         or 'make',
       cond = function()
         if vim.fn.has('win32') == 1 then
-          return vim.fn.executable('cmake') == 1
+          return vim.fn.executable('zig') == 1
         else
           return vim.fn.executable('make') == 1
         end
