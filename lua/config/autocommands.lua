@@ -26,7 +26,9 @@ vim.api.nvim_create_autocmd('BufReadPost', {
 })
 
 -- =============================================================
--- Org Auto-Sync v2: Stash-safe, --no-rebase, asynchron
+-- Org Auto-Sync v3: Stash-safe, --no-rebase, asynchron
+--   Windows: PowerShell (pwsh / powershell)
+--   Unix:    bash
 -- =============================================================
 
 local org_dir = vim.fn.expand '~/org'
@@ -37,16 +39,10 @@ end
 
 -- Git-Befehl im org-Ordner ausfuehren mit Fehler-Notification
 local function org_git(cmd, label)
-  -- Windows: git bash verwenden falls vorhanden, sonst bash
   local shell
   if vim.fn.has('win32') == 1 then
-    local git_bash = 'C:/Program Files/Git/bin/bash.exe'
-    if vim.fn.executable(git_bash) == 1 then
-      shell = { git_bash, '-c', cmd }
-    else
-      vim.notify('org-sync: Git Bash nicht gefunden (' .. git_bash .. ')', vim.log.levels.WARN)
-      return
-    end
+    local ps = vim.fn.executable('pwsh') == 1 and 'pwsh' or 'powershell'
+    shell = { ps, '-NoProfile', '-NonInteractive', '-Command', cmd }
   else
     shell = { 'bash', '-c', cmd }
   end
@@ -69,13 +65,25 @@ vim.api.nvim_create_autocmd('VimEnter', {
   callback = function()
     if not is_org_repo() then return end
 
-    local cmd = table.concat({
-      'cd ' .. org_dir,
-      'git stash --include-untracked 2>/dev/null',
-      'git pull --no-rebase',
-      'git stash pop 2>/dev/null',
-      'git add -A && git diff --cached --quiet || git commit -m "sync: auto-merge on startup"',
-    }, ' && ')
+    local cmd
+    if vim.fn.has('win32') == 1 then
+      cmd = table.concat({
+        'cd ~/org',
+        'git stash --include-untracked 2>$null',
+        'git pull --no-rebase',
+        'git stash pop 2>$null',
+        'git add -A',
+        'git diff --cached --quiet; if ($LASTEXITCODE -ne 0) { git commit -m "sync: auto-merge on startup" }',
+      }, '; ')
+    else
+      cmd = table.concat({
+        'cd ' .. org_dir,
+        'git stash --include-untracked 2>/dev/null',
+        'git pull --no-rebase',
+        'git stash pop 2>/dev/null',
+        'git add -A && git diff --cached --quiet || git commit -m "sync: auto-merge on startup"',
+      }, ' && ')
+    end
 
     org_git(cmd, 'org pull')
   end,
@@ -85,7 +93,7 @@ vim.api.nvim_create_autocmd('VimEnter', {
 -- Auto-Commit + Push bei jedem Speichern einer .org-Datei
 vim.api.nvim_create_autocmd('BufWritePost', {
   group = vim.api.nvim_create_augroup('org-sync-push', { clear = true }),
-  pattern = vim.fn.expand '~/org/*.org',
+  pattern = vim.fn.expand('~/org') .. '/*.org',
   callback = function()
     if not is_org_repo() then return end
 
@@ -93,13 +101,24 @@ vim.api.nvim_create_autocmd('BufWritePost', {
     local timestamp = os.date('%Y-%m-%d %H:%M')
     local commit_msg = string.format('update %s (%s)', filename, timestamp)
 
-    local cmd = table.concat({
-      'cd ' .. org_dir,
-      'git add -A',
-      string.format('git diff --cached --quiet || git commit -m "%s"', commit_msg),
-      'git pull --no-rebase',
-      'git push',
-    }, ' && ')
+    local cmd
+    if vim.fn.has('win32') == 1 then
+      cmd = table.concat({
+        'cd ~/org',
+        'git add -A',
+        string.format('git diff --cached --quiet; if ($LASTEXITCODE -ne 0) { git commit -m "%s" }', commit_msg),
+        'git pull --no-rebase',
+        'git push',
+      }, '; ')
+    else
+      cmd = table.concat({
+        'cd ' .. org_dir,
+        'git add -A',
+        string.format('git diff --cached --quiet || git commit -m "%s"', commit_msg),
+        'git pull --no-rebase',
+        'git push',
+      }, ' && ')
+    end
 
     org_git(cmd, 'org sync')
   end,
