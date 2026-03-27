@@ -49,6 +49,11 @@ return {
           template = '* %?\n  SCHEDULED: %^T',
           target = '~/org/termine.org',
         },
+        j = {
+          description = 'Journal',
+          template = '* %U\n%?',
+          target = '~/org/journal/%<%Y-%m>.org',
+        },
       },
     }
   end,

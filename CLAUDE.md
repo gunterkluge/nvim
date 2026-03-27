@@ -3,7 +3,6 @@
 ## Struktur
 - `lua/config/` — options, keymaps, autocommands, lazy-bootstrap
 - `lua/plugins/` — je Plugin eine Datei
-- `lua/custom/` — eigene Module (journal)
 - `after/ftplugin/` — dateityp-spezifische Einstellungen
 - `LuaSnip/` — eigene Snippets nach Dateityp
 
@@ -12,7 +11,6 @@
 - **Completion**: blink.cmp + LuaSnip (eigene Snippets in `LuaSnip/`)
 - **LSP**: nvim-lspconfig + Mason (pyright, ruff, texlab, lua_ls)
 - **Formatter**: conform.nvim (stylua für Lua, ruff_format für Python)
-- **Linter**: nvim-lint (markdownlint für Markdown)
 - **Fuzzy Finder**: Telescope
 - **Colorscheme**: Catppuccin (mocha=dark, latte=light, folgt macOS Appearance)
 - **Dateibaum**: Neo-tree
@@ -33,7 +31,7 @@
 - Treesitter highlight für latex/tex deaktiviert — vimtex übernimmt das
 
 ## Tastenkürzel (eigene)
-- `<leader>j` — Journal für heute öffnen
+- `<leader>oc` → `j` — Journal-Eintrag (Org Capture)
 - `<leader>tl` — Light/Dark toggle
 - `<leader>tz` — Zen-Mode toggle
 - `<leader>tc` — Conceal toggle
