@@ -31,7 +31,7 @@ require('lazy').setup {
   -- colorscheme that will be used when installing plugins.
   install = { colorscheme = { 'catppuccin' } },
   -- automatically check for plugin updates
-  checker = { enabled = true },
+  checker = { enabled = true, frequency = 604800, notify = false },
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
     -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
