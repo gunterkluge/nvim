@@ -7,7 +7,10 @@ return {
   config = function()
     require('modus-themes').setup({
       style = 'auto', -- folgt vim.o.background
-      variant = 'deuteranopia', -- Rot-Gruen-freundlich
+      variants = {
+        modus_operandi = 'deuteranopia',
+        modus_vivendi = 'deuteranopia',
+      },
       on_highlights = function(highlights, colors)
         highlights['Folded'] = { fg = colors.fg_dim, bg = 'NONE' }
       end,
