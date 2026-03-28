@@ -16,6 +16,7 @@ vim.schedule(function()
 end)
 vim.opt.breakindent = true
 vim.opt.conceallevel = 2
+vim.opt.splitright = true
 vim.opt.undofile = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
@@ -31,3 +32,8 @@ vim.opt.inccommand = 'split'
 vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 vim.opt.confirm = true
+if vim.fn.has 'win32' == 1 then
+  os.setlocale('german', 'time')
+else
+  os.setlocale('de_DE.UTF-8', 'time')
+end
