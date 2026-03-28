@@ -6,7 +6,7 @@ return {
     -- Windows: Zig als Compiler fuer den org-Treesitter-Parser erzwingen
     -- WICHTIG: orgmode hat einen EIGENEN Parser-Installer, unabhaengig von
     -- nvim-treesitter! Die Einstellung in treesitter.lua hilft hier NICHT.
-    if vim.fn.has('win32') == 1 then
+    if vim.fn.has 'win32' == 1 then
       require('orgmode.utils.treesitter.install').compilers = { 'zig' }
     end
 
@@ -55,6 +55,7 @@ return {
           target = '~/org/journal/%<%Y-%m>.org',
         },
       },
+      win_split_mode = 'auto',
     }
   end,
 }
