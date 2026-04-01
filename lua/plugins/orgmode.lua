@@ -42,7 +42,7 @@ return {
       org_capture_templates = {
         t = {
           description = 'Task',
-          template = '* TODO %?\n',
+          template = '* TODO %?',
           target = '~/org/inbox.org',
         },
         a = {
