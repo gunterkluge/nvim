@@ -1,11 +1,5 @@
 return {
   {
-    'saghen/blink.compat',
-    version = '*',
-    lazy = true,
-    opts = {},
-  },
-  {
     'saghen/blink.cmp',
     event = 'VimEnter',
     version = '1.*',
@@ -29,7 +23,6 @@ return {
         end,
       },
       'folke/lazydev.nvim',
-      'micangl/cmp-vimtex',
     },
     --- @module 'blink.cmp'
     --- @type blink.cmp.Config
@@ -46,7 +39,6 @@ return {
       sources = {
         default = { 'lsp', 'path', 'snippets', 'lazydev' },
         per_filetype = {
-          tex = { 'vimtex', 'snippets' },
           org = { 'orgmode', 'snippets', 'path' },
           sql = { 'dadbod', 'snippets', 'path' },
           mysql = { 'dadbod', 'snippets', 'path' },
@@ -54,7 +46,6 @@ return {
         },
         providers = {
           lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
-          vimtex = { name = 'vimtex', module = 'blink.compat.source' },
           dadbod = { name = 'Dadbod', module = 'vim_dadbod_completion.blink' },
           orgmode = { name = 'Orgmode', module = 'orgmode.org.autocompletion.blink' },
         },

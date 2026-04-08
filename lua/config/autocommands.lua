@@ -1,18 +1,3 @@
--- Yank-Highlight
-vim.api.nvim_create_autocmd('TextYankPost', {
-  group = vim.api.nvim_create_augroup('highlight-yank', { clear = true }),
-  callback = function()
-    vim.highlight.on_yank()
-  end,
-})
-
--- Trailing Whitespace beim Speichern entfernen
-vim.api.nvim_create_autocmd('BufWritePre', {
-  group = vim.api.nvim_create_augroup('remove-trailing-whitespace', { clear = true }),
-  pattern = '*',
-  command = '%s/\\s\\+$//e',
-})
-
 -- Cursor-Position wiederherstellen beim Oeffnen
 vim.api.nvim_create_autocmd('BufReadPost', {
   group = vim.api.nvim_create_augroup('restore-cursor', { clear = true }),
