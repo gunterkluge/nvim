@@ -61,7 +61,7 @@ return {
           target = '~/org/journal/%<%Y-%m>.org',
         },
       },
-      win_split_mode = 'auto',
+      win_split_mode = 'float',
     }
 
     vim.keymap.set('n', '<leader>oj', function()
