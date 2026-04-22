@@ -32,7 +32,7 @@ return {
         -- statusline will be shown only if 'laststatus' == 3
         laststatus = 0, -- turn off the statusline in zen mode
       },
-      twilight = { enabled = true }, -- enable to start Twilight when zen mode opens
+      twilight = { enabled = false }, -- ersetzt durch Snacks.dim
       gitsigns = { enabled = false }, -- disables git signs
       tmux = { enabled = false }, -- disables the tmux statusline
       todo = { enabled = false }, -- if set to "true", todo-comments.nvim highlights will be disabled
@@ -61,9 +61,12 @@ return {
       -- this will change the scale factor in Neovide when in zen mode
       -- See alse also the Plugins/Wezterm section in this projects README
     },
-    -- callback where you can add custom code when the Zen window opens
-    on_open = function(win) end,
-    -- callback where you can add custom code when the Zen window closes
-    on_close = function() end,
+    -- Snacks.dim aktivieren/deaktivieren
+    on_open = function()
+      Snacks.dim.enable()
+    end,
+    on_close = function()
+      Snacks.dim.disable()
+    end,
   },
 }
