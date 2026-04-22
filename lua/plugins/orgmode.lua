@@ -11,12 +11,21 @@ return {
     end
 
     require('orgmode').setup {
-      -- Alle .org-Dateien in ~/org/ werden in der Agenda angezeigt
-      org_agenda_files = '~/org/**/*',
+      -- Agenda — deckungsgleich mit Emacs (init.el, Abschnitt Org-Mode).
+      -- wissen/ ist Referenz, archive.org ist Archiv — beides nicht in der Agenda.
+      org_agenda_files = {
+        '~/org/inbox.org',
+        '~/org/termine.org',
+        '~/org/baustellen.org',
+        '~/org/work/**/*.org',
+        '~/org/journal/**/*.org',
+      },
       -- Neue Captures landen hier
       org_default_notes_file = '~/org/inbox.org',
-      -- TODO-Zustände: nur das Nötigste
-      org_todo_keywords = { 'TODO(t)', 'WAIT(w)', '|', 'DONE(d)', 'DROP(x)' },
+      -- TODO-Zustände — identisch zu Emacs-Config (init.el, Abschnitt Org-Mode)
+      org_todo_keywords = { 'TODO(t)', 'WAIT(w)', '|', 'DONE(d)', 'KILL(k)' },
+      -- Archiv — dieselbe Datei wie in Emacs (init.el: org-archive-location)
+      org_archive_location = '~/org/archive.org::* Archiv aus %s',
       -- Agenda startet am heutigen Tag
       org_agenda_start_on_weekday = false,
       mappings = {
